@@ -7,25 +7,26 @@
 # $PRMBench$: A Fine-grained and Challenging Benchmark for Process-Level Reward Models
 
 ![License: Apache-2.0](https://img.shields.io/badge/license-Apache%202.0-green)
-> Accelerating the development of process-level reward models (PRMs) with `mr_eval`
+
 
 🏠 [PRMBench Homepage](https://prmbench.github.io/) | 🤗 [Huggingface Datasets](https://huggingface.co/datasets/hitsmy/PRMBench_Preview) | 📑 [Paper](https://arxiv.org/abs/2501.03124)
 
 
 📚 [Documentation](docs/document.md)
 
-
 <p align="center" width="80%">
+  <img src="./docs/assets/main_fig.svg" width="70%" height="70%">
+</p>
+<p align="center" style="font-size: 14px; color: gray;">
+  <em>An overview of our <b>PRMBench</b>. The left part illustrates our data curation procedure. In the right part of the figure, we showcase demonstrations of our evaluation subjects and the relative performance of tested models.</em>
+</p>
+<!-- <p align="center" width="80%">
 <img src="./docs/assets/main_fig.svg"  width="70%" height="70%">
 </p>
-<h2 class="subtitle has-text-centered">
-<strong>Main Figure.</strong> An overview of our <span class="dnerf"><strong>PRMBench</strong></span>. The left part illustrates our data curation procedure. In the right part of the figure, we showcase demonstrations of our evaluation subjects and the relative performance of tested models, with
-<span style="background-color: rgb(201, 229, 221); padding: 0.1em;">green</span>,
-<span style="background-color: rgb(255, 243, 213); padding: 0.1em;">yellow</span>, and
-<span style="background-color: rgb(211, 209, 209); padding: 0.1em;">gray</span> boxes indicating <em>simplicity</em>, <em>soundness</em>, and <em>sensitivity</em> respectively, where
-<span style="background-color: rgb(224, 146, 124); padding: 0.1em;">red</span> circles represent erroneous steps and
-<span style="background-color: rgb(126, 176, 149); padding: 0.1em;">green</span> circles indicate correct regular steps.
-</h2>
+<p>An overview of our $PRMBench$. The left part illustrates our data curation procedure. In the right part of the figure, we showcase demonstrations of our evaluation subjects and the relative performance of tested models. </p> -->
+
+# PRM Eval ToolKit
+> Accelerating the development of process-level reward models (PRMs) with `mr_eval`
 
 PRM Eval ToolKit comprises an automated evaluation framework `mr_eval`, along with a data generation and annotation framework `mr_annotate`. This is also the official github repo for $PRMBench$. The visualization scripts for $PRMBench$ can be found in `mr_visualize`.
 
