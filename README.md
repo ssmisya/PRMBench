@@ -9,10 +9,10 @@
 ![License: Apache-2.0](https://img.shields.io/badge/license-Apache%202.0-green)
 
 
-🏠 [PRMBench Homepage](https://prmbench.github.io/) | 🤗 [Huggingface Datasets](https://huggingface.co/datasets/hitsmy/PRMBench_Preview) | 📑 [Paper](https://arxiv.org/abs/2501.03124)
+🏠 [PRMBench Homepage](https://prmbench.github.io/) | 🤗 [Huggingface Datasets](https://huggingface.co/datasets/hitsmy/PRMBench_Preview) | 📑 [Paper](https://arxiv.org/abs/2501.03124) | 📚 [Documentation](docs/document.md)
 
 
-📚 [Documentation](docs/document.md)
+
 
 <p align="center" width="80%">
   <img src="./docs/assets/main_fig.svg" width="70%" height="70%">
@@ -25,14 +25,13 @@
 </p>
 <p>An overview of our $PRMBench$. The left part illustrates our data curation procedure. In the right part of the figure, we showcase demonstrations of our evaluation subjects and the relative performance of tested models. </p> -->
 
-# PRM Eval ToolKit
+## PRM Eval ToolKit
 > Accelerating the development of process-level reward models (PRMs) with `mr_eval`
 
 PRM Eval ToolKit comprises an automated evaluation framework `mr_eval`, along with a data generation and annotation framework `mr_annotate`. This is also the official github repo for $PRMBench$. The visualization scripts for $PRMBench$ can be found in `mr_visualize`.
 
 `mr_eval` is an auto PRM evaluation model which is adaptable to custom datasets and models, ensuring broad accessibility.
 
----
 
 
 ## Installation
@@ -128,7 +127,7 @@ The best performance for each category and task is in **bold**, while the second
 
 Please refer to our [documentation](docs/README.md).
 
-## Data Format for PRMBench
+## Data Format for $PRMBench$
 
 In PRMBench, our data format can be formulated as follows:
 
