@@ -1,0 +1,12 @@
+task_name: "prmtest_classified_subset400"
+dataset_path: data
+dataset_type: "dir_of_jsonl"
+generation_config:
+  max_length: 2048
+
+# test_split: validation
+# metric_list:
+#   - metric: hard_acc
+#     aggregation: mean
+#     higher_is_better: true
+# include: _default_template_docvqa_yaml

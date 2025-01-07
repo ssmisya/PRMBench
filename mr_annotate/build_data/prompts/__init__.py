@@ -1,0 +1,1 @@
+from .prompt_new import prompt_dict

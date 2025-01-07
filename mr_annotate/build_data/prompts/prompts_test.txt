@@ -1,0 +1,87 @@
+Improved Prompt
+I want to test the ability of process-level reward models to judge whether a reasoning process or step is correct. To do this, please help me build flawed cases by introducing specific types of errors into a given reasoning process.
+
+You will be provided with:
+
+1. A mathematical problem.
+2. Its standard correct answer.
+3. A step-by-step reasoning process used to solve it.
+Your task is to modify specific steps or introduce new ones to create reasoning that appears plausible but is incorrect. The goal is to simulate flawed solutions by introducing hallucinations or errors based on the types described below.
+
+Error Types to Introduce
+1. Redundancy:
+Add unnecessary steps that do not affect the correctness of the solution but make the process less compact. For example, if the correct chain is $A \to B$, modify it to $A \to C \to B$, where $C$ is redundant.
+Circular Logic:
+Introduce a reasoning loop where a step depends on itself indirectly. For example, $A \to B \to C \to A$, forming a circular chain of reasoning.
+Counterfactual:
+Add a statement that contradicts known ground truth. This could involve using outdated theories, omitting restrictions in a theory, or introducing an incorrect assumption.
+Step Contradiction:
+Introduce a conflict between two or more steps in the reasoning process. For example, if the reasoning chain is $P = {S_1, S_2, ..., S_n}$, a contradiction exists if $S_i \perp S_j$ (where $i \neq j$).
+Domain Inconsistency:
+Use a statement or theory that is valid in a different domain or context but is incorrect in the current reasoning chain.
+Confident Hallucination:
+Introduce a false statement expressed in a confident tone, making it appear as ground truth while it contradicts known facts.
+Missing Conditions or Prerequisites:
+Omit critical premises, assumptions, or conditions necessary for logical reasoning. This creates a logical gap or incomplete conclusion.
+Deception or Traps:
+Modify a ground-truth statement slightly to make it appear correct while introducing an error. For example, subtly altering a formula or definition.
+Output Requirements
+After making the modifications, provide the following structured output:
+
+json
+
+复制
+{
+  "origin_process": ["origin_step 1", "origin_step 2", ...],
+  "modified_process": ["modified_step 1", "modified_step 2", ...],
+  "modified_steps": [1, 5, 7, ...],
+  "hallucination_steps": [5, 6, ...],
+  "hallucination_types": [1, 2, ...],
+  "reason": "Explanation for the changes."
+}
+Detailed Requirements:
+origin_process: A non-empty list of strings representing the original reasoning steps provided as input.
+modified_process: A non-empty list of strings representing the reasoning process after your modifications. Retain the original steps except for those you have changed.
+modified_steps: A non-empty list of integers indicating the indexes of all modified steps. Indexing starts at 1.
+hallucination_steps: A non-empty list of integers representing the steps that contain hallucinations or errors. These should also be part of modified_steps.
+hallucination_types: A list of integers corresponding to the types of hallucinations introduced (1 for redundancy, 2 for circular logic, etc.). Use the numbering provided in the error types section.
+reason: A clear explanation of the modifications made, why they were introduced, and how they align with the specified error types.
+Formatting Notes:
+Ensure all lists are non-empty.
+The numbering of steps in origin_process and modified_process must be consistent.
+Use LaTeX format for all mathematical symbols (e.g., $x^2$ for $x$ squared). Do not use Unicode symbols such as \u2248 or \u00f7.
+Ensure the JSON object is well-formed, with proper escaping for special characters like \n (e.g., use \\n for newlines).
+Example Task
+Input:
+Problem: Solve $x^2 + 2x + 1 = 0$.
+Correct Answer: $x = -1$.
+Correct Reasoning:
+Step 1: Recognize the equation as a perfect square trinomial.
+Step 2: Factorize it as $(x+1)^2 = 0$.
+Step 3: Solve for $x$, giving $x = -1$.
+Output Example:
+json
+
+复制
+{
+  "origin_process": [
+    "Step 1: Recognize the equation as a perfect square trinomial.",
+    "Step 2: Factorize it as $(x+1)^2 = 0$.",
+    "Step 3: Solve for $x$, giving $x = -1$."
+  ],
+  "modified_process": [
+    "Step 1: Recognize the equation as a perfect square trinomial.",
+    "Step 2: Factorize it as $(x+1)^2 = 0$.",
+    "Step 3: Introduce a redundant step: Assume $x+1 = 1$, leading to $x = 0$.",
+    "Step 4: Solve for $x$, giving $x = -1$."
+  ],
+  "modified_steps": [3],
+  "hallucination_steps": [3],
+  "hallucination_types": [1],
+  "reason": "Step 3 introduces a redundant assumption ($x+1 = 1$) that is not necessary for solving the equation. This creates a hallucination of type 1 (redundancy)."
+}
+Notes
+Ensure the hallucinations you introduce are realistic and align with the error types described.
+The reasoning process should remain plausible and easy to follow, even with the introduced errors.
+Focus on creating subtle errors that test a model's ability to detect flaws effectively.
+By following this structure, you can simulate realistic flawed reasoning processes for testing purposes.
