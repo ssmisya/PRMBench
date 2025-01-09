@@ -51,6 +51,8 @@ pip install -e .
 
 ## Example Usages
 
+We released some example scripts/configs to demonstrate how to use our toolkit. You can find them in the `mr_eval/scripts` directory.
+
 **Evaluation of ReaonEval-7B on PRMBench Directly**
 
 A simple way to run Mr Eval

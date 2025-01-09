@@ -5,6 +5,9 @@
 
 ## 1. Config File Formatting
 
+**We released some example scripts/configs to demonstrate how to use our toolkit. You can find them in the `mr_eval/scripts` directory.**
+
+
 You can organize your config as a list of dict or a single dict. It's recommend to use a yaml file. 
 The 
 ```yaml
@@ -59,6 +62,7 @@ use_cpu: false
 ```
 
 But notice that when testing api modes (e.g. gemini and openai series models), the batch size must be set at 1 and do not use multi-process parallel.
+
 
 ## 2.Introduction to our basic framework
 

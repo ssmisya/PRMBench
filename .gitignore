@@ -162,7 +162,10 @@ cython_debug/
 #.idea/
 
 # scripts
-mr_eval/scripts/
+mr_eval/scripts/bash_scripts/
+mr_eval/scripts/configs/
+mr_eval/scripts/logs/
+
 mr_annotate/build_data/selection_of_data/
 mr_annotate/build_data/scripts/
 

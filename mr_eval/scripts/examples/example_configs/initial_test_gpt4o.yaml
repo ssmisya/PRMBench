@@ -1,0 +1,9 @@
+model_args:
+  model: openai_models
+  model_args: model_name=gpt-4o,endpoint=https://api.openai.com/v1,api_key=your-api-key,log_save_dir=./mr_eval/scripts/logs/generated/model_generate_logs/gpt4o.jsonl
+  batch_size: 1 # Must be 1 when calling APIs
+task_args:
+  task_name: prmtest_correct
+script_args:
+  verbosity: INFO
+  output_path: ./mr_eval/scripts/logs/prmtest_classified/gpt4o.jsonl

@@ -1,0 +1,168 @@
+- model_args:
+    model: reasoneval
+    model_args: pretrained=/mnt/petrelfs/songmingyang/songmingyang/model/reasoning/ReasonEval-7B
+    batch_size: 2
+  task_args:
+    task_name: prmtest_classified
+    resume_from_ckpt:
+      prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/reasoneval7b_prm800k_classified.jsonl
+    save_to_ckpt:
+      prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/reasoneval7b_prm800k_classified.jsonl
+  script_args:
+    verbosity: INFO
+    output_path: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/prmtest_classified/reasoneval7b.jsonl
+
+- model_args:
+    model: reasoneval
+    model_args: pretrained=/mnt/petrelfs/songmingyang/songmingyang/model/reasoning/ReasonEval-34B,model_size=34B
+    batch_size: 2
+  task_args:
+    task_name: prmtest_classified
+    resume_from_ckpt:
+      prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/reasoneval34b_prm800k_classified.jsonl
+    save_to_ckpt:
+      prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/reasoneval34b_prm800k_classified.jsonl
+  script_args:
+    verbosity: INFO
+    output_path: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/prmtest_classified/reasoneval34b.jsonl
+    
+# - model_args:
+#     model: math_shepherd
+#     model_args: pretrained=/mnt/petrelfs/songmingyang/songmingyang/model/reasoning/math-shepherd-mistral-7b-prm
+#     batch_size: 2
+#   task_args:
+#     task_name: prmtest_classified
+#     resume_from_ckpt:
+#       prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/mathshepherd_prm800k_classified.jsonl
+#     save_to_ckpt:
+#       prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/mathshepherd_prm800k_classified.jsonl
+#   script_args:
+#     verbosity: INFO
+#     output_path: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/prmtest_classified/mathshepherd.jsonl
+    
+# - model_args:
+#     model: mathminos_mistral
+#     model_args: pretrained=/mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/ref/MATH-Minos/RM/ckpts/minos_mistral
+#     batch_size: 2
+#   task_args:
+#     task_name: prmtest_classified
+#     resume_from_ckpt:
+#       prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/mathminos_mistral_prm800k_classified.jsonl
+#     save_to_ckpt:
+#       prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/mathminos_mistral_prm800k_classified.jsonl
+#   script_args:
+#     verbosity: INFO
+#     output_path: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/prmtest_classified/mathminos_mistral.jsonl
+
+# - model_args:
+#     model: llemma7b_prm
+#     model_args: pretrained=/mnt/petrelfs/songmingyang/songmingyang/model/reasoning/llemma-7b-prm-prm800k-level-1to3-hf
+#     batch_size: 2
+#   task_args:
+#     task_name: prmtest_classified
+#     resume_from_ckpt:
+#       prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/llemma7b_p800k_prm800k_classified.jsonl
+#     save_to_ckpt:
+#       prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/llemma7b_p800k_prm800k_classified.jsonl
+#   script_args:
+#     verbosity: INFO
+#     output_path: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/prmtest_classified/llemma7b_prm_prm800k.jsonl
+  
+# - model_args:
+#     model: llemma7b_prm
+#     model_args: pretrained=/mnt/petrelfs/songmingyang/songmingyang/model/reasoning/llemma-7b-prm-metamath-level-1to3-hf
+#     batch_size: 2
+#   task_args:
+#     task_name: prmtest_classified
+#     resume_from_ckpt:
+#       prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/llemma7b_pmetamath_prm800k_classified.jsonl
+#     save_to_ckpt:
+#       prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/llemma7b_pmetamath_prm800k_classified.jsonl
+#   script_args:
+#     verbosity: INFO
+#     output_path: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/prmtest_classified/llemma7b_prm_metamath.jsonl
+
+# - model_args:
+#     model: llemma7b_prm
+#     model_args: pretrained=/mnt/petrelfs/songmingyang/songmingyang/model/reasoning/llemma-7b-oprm-prm800k-level-1to3-hf
+#     batch_size: 2
+#   task_args:
+#     task_name: prmtest_classified
+#     resume_from_ckpt:
+#       prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/llemma7b_op800k_prm800k_classified.jsonl
+#     save_to_ckpt:
+#       prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/llemma7b_op800k_prm800k_classified.jsonl
+#   script_args:
+#     verbosity: INFO
+#     output_path: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/prmtest_classified/llemma7b_oprm_prm800k.jsonl
+    
+
+# - model_args:
+#     model: skywork_prm
+#     model_args: pretrained=/mnt/petrelfs/songmingyang/songmingyang/model/reasoning/Skywork-o1-Open-PRM-Qwen-2.5-1.5B
+#     batch_size: 2
+#   task_args:
+#     task_name: prmtest_classified
+#     resume_from_ckpt:
+#       prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/skywork_1_5b_prm800k_classified.jsonl
+#     save_to_ckpt:
+#       prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/skywork_1_5b_prm800k_classified.jsonl
+#   script_args:
+#     verbosity: INFO
+#     output_path: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/prmtest_classified/skyworkprm_1_5B.jsonl
+  
+# - model_args:
+#     model: skywork_prm
+#     model_args: pretrained=/mnt/petrelfs/songmingyang/songmingyang/model/reasoning/Skywork-o1-Open-PRM-Qwen-2.5-7B
+#     batch_size: 2
+#   task_args:
+#     task_name: prmtest_classified
+#     resume_from_ckpt:
+#       prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/skywork_7b_prm800k_classified.jsonl
+#     save_to_ckpt:
+#       prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/skywork_7b_prm800k_classified.jsonl
+#   script_args:
+#     verbosity: INFO
+#     output_path: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/prmtest_classified/skyworkprm_7B.jsonl
+
+# - model_args:
+#     model: llama3_1_8b_prm
+#     model_args: pretrained=/mnt/petrelfs/songmingyang/songmingyang/model/reasoning/Llama3.1-8B-PRM-Deepseek-Data
+#     batch_size: 2
+#   task_args:
+#     task_name: prmtest_classified
+#     resume_from_ckpt:
+#       prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/llama318b_deepseek_prm800k_classified.jsonl
+#     save_to_ckpt:
+#       prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/llama318b_deepseek_prm800k_classified.jsonl
+#   script_args:
+#     verbosity: INFO
+#     output_path: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/prmtest_classified/llama3_1_8b_prm_deepseek.jsonl
+    
+# - model_args:
+#     model: llama3_1_8b_prm
+#     model_args: pretrained=/mnt/petrelfs/songmingyang/songmingyang/model/reasoning/Llama3.1-8B-PRM-Mistral-Data
+#     batch_size: 2
+#   task_args:
+#     task_name: prmtest_classified
+#     resume_from_ckpt:
+#       prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/llama318b_mistral_prm800k_classified.jsonl
+#     save_to_ckpt:
+#       prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/llama318b_mistral_prm800k_classified.jsonl
+#   script_args:
+#     verbosity: INFO
+#     output_path: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/prmtest_classified/llama3_1_8b_prm_mistral.jsonl
+    
+# - model_args:
+#     model: qwen_qwq
+#     model_args: pretrained=/mnt/petrelfs/songmingyang/songmingyang/model/reasoning/policy_models/QwQ-32B-Preview
+#     batch_size: 2 # Must be 1 when calling APIs
+#   task_args:
+#     task_name: prmtest_classified
+#     resume_from_ckpt:
+#       prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/qwen_qwq_prm800k_classified.jsonl
+#     save_to_ckpt:
+#       prmtest_classified: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated/ckpt/qwen_qwq_prm800k_classified.jsonl
+#   script_args:
+#     verbosity: INFO
+#     output_path: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/prmtest_classified/qwen_qwq.jsonl
