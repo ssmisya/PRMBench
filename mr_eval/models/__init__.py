@@ -17,6 +17,7 @@ AVAILABLE_MODELS = {
     "skywork_prm":"SkyworkPRM",
     "gemini_models": "GeminiModels",
     "qwen_qwq": "QwenQwQ",
+    "qwen_prm": "QwenPRM",
 }
 
 
