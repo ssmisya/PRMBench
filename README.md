@@ -9,7 +9,7 @@
 ![License: Apache-2.0](https://img.shields.io/badge/license-Apache%202.0-green)
 
 
-🏠 [PRMBench Homepage](https://prmbench.github.io/) | 🤗 [Huggingface Datasets](https://huggingface.co/datasets/hitsmy/PRMBench_Preview) | 📑 [Paper](https://arxiv.org/abs/2501.03124) | 📚 [Documentation](docs/document.md)
+🏠 [PRMBench Homepage](https://prmbench.github.io/) | 🤗 [Hugging Face Datasets](https://huggingface.co/datasets/hitsmy/PRMBench_Preview) | 📑 [Paper](https://arxiv.org/abs/2501.03124) | 📚 [Documentation](docs/document.md)
 
 
 
