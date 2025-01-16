@@ -29,7 +29,7 @@ class ModelArguments:
 
 @dataclass
 class TaskArguments:
-    task_name: Optional[List[str]] = field(default_factory=lambda: ["reasoneval"])
+    task_name: Optional[str] = field(default="reasoneval")
     resume_from_ckpt: Optional[Dict[str, str]] = field(default=None,)
     def __post_init__(self):
         # 如果传入的是一个字典，将其包装成 Box；否则默认生成空 Box
