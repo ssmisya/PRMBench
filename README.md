@@ -4,13 +4,11 @@
 <img src="./docs/assets/main_logo.png"  width="70%" height="70%">
 </p>
 
-# $PRMBench$: A Fine-grained and Challenging Benchmark for Process-Level Reward Models
+# PRMBench: A Fine-grained and Challenging Benchmark for Process-Level Reward Models
 
-![License: Apache-2.0](https://img.shields.io/badge/license-Apache%202.0-green)
 
 
 🏠 [PRMBench Homepage](https://prmbench.github.io/) | 🤗 [Huggingface Datasets](https://huggingface.co/datasets/hitsmy/PRMBench_Preview) | 📑 [Paper](https://arxiv.org/abs/2501.03124) | 📚 [Documentation](docs/document.md)
-
 
 
 
@@ -24,6 +22,11 @@
 <img src="./docs/assets/main_fig.svg"  width="70%" height="70%">
 </p>
 <p>An overview of our $PRMBench$. The left part illustrates our data curation procedure. In the right part of the figure, we showcase demonstrations of our evaluation subjects and the relative performance of tested models. </p> -->
+
+## News
+[2025-01-16] We added Qwen2.5-Math-PRM-7B implementations to PRM Eval ToolKit, which becomes the new SOTA for open-source PRMs in PRMBench.
+
+[2025-01-08] We released our paper, code, dataset, and project page.
 
 ## PRM Eval ToolKit
 > Accelerating the development of process-level reward models (PRMs) with `mr_eval`
@@ -99,7 +102,7 @@ Config file example:
 
 For detailed information and config setting please refer to our [documentation](docs/README.md).
 
-## $PRMBench$ LeaderBoard
+## PRMBench LeaderBoard
 
 | Model | Overall| NR. | NCL. | Avg (simplicity) | ES. | SC. | DC. | CI. | Avg (soundness) | PS. | DR. | MS. | Avg (sensitivity)  |
 |-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|------- |
@@ -131,7 +134,7 @@ The best performance for each category and task is in **bold**, while the second
 
 Please refer to our [documentation](docs/README.md).
 
-## Data Format for $PRMBench$
+## Data Format for PRMBench
 
 In PRMBench, our data format can be formulated as follows:
 
@@ -186,3 +189,4 @@ In PRMBench, our data format can be formulated as follows:
   url={https://arxiv.org/pdf/2501.03124}
 }
 ```
+![License: Apache-2.0](https://img.shields.io/badge/license-Apache%202.0-green)
