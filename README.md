@@ -13,7 +13,7 @@
 
 
 <p align="center" width="80%">
-  <img src="./docs/assets/main_fig.svg" width="100%" height="100%">
+  <img src="./docs/assets/main_fig.svg" width="70%" height="70%">
 </p>
 <p align="center" style="font-size: 14px; color: gray;">
   <em>An overview of our <b>PRMBench</b>. The left part illustrates our data curation procedure. In the right part of the figure, we showcase demonstrations of our evaluation subjects and the relative performance of tested models.</em>
