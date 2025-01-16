@@ -105,21 +105,23 @@ For detailed information and config setting please refer to our [documentation](
 |-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|------- |
 | [Skywork-PRM-1.5B](https://huggingface.co/Skywork/Skywork-o1-Open-PRM-Qwen-2.5-1.5B) | 31.7 | 31.4 | 35.8 | 33.6 | 32.4 | 25.7 | 26.0 | 30.2 | 28.6 | 33.1 | 32.3 | 81.1 | 48.8 
 | [Skywork-PRM-7B](https://huggingface.co/Skywork/Skywork-o1-Open-PRM-Qwen-2.5-7B) | 36.2 | 35.7 | 41.2 | 38.4 | 36.7 | 29.1 | 30.6 | 34.4 | 32.7 | 36.8 | 37.4 | 88.8 | 54.3 
-| [Llemma-PRM800k-7B](https://huggingface.co/ScalableMath/llemma-7b-prm-prm800k-level-1to3-hf) | 52.0 | 49.3 | _53.4_ | 51.4 | 56.4 | 47.1 | 46.7 | 53.3 | 50.9 | 51.0 | 53.5 | 93.6 | 66.0 
+| [Llemma-PRM800k-7B](https://huggingface.co/ScalableMath/llemma-7b-prm-prm800k-level-1to3-hf) | 52.0 | 49.3 | 53.4 | 51.4 | 56.4 | 47.1 | 46.7 | 53.3 | 50.9 | 51.0 | 53.5 | 93.6 | 66.0 
 | [Llemma-MetaMath-7B](https://huggingface.co/ScalableMath/llemma-7b-prm-metamath-level-1to3-hf) | 50.5 | 50.2 | 50.5 | 50.3 | 51.9 | 47.6 | 44.4 | 52.1 | 49.0 | 50.5 | 51.3 | 96.0 | 66.0 
 | [Llemma-oprm-7B](https://huggingface.co/ScalableMath/llemma-7b-oprm-prm800k-level-1to3-hf) | 50.3 | 48.7 | 49.3 | 49.0 | 54.2 | 46.8 | 44.5 | 53.5 | 49.8 | 49.2 | 51.3 | 91.8 | 64.1 
-| [MATHMinos-Mistral-7B](https://github.com/KbsdJames/MATH-Minos) | 54.2 | 48.8 | **54.0** | 51.4 | 57.0 | 52.1 | 50.7 | 57.8 | 54.4 | 52.8 | 55.8 | 91.1 | 66.5 
+| [MATHMinos-Mistral-7B](https://github.com/KbsdJames/MATH-Minos) | 54.2 | 48.8 | _54.0_ | 51.4 | 57.0 | 52.1 | 50.7 | 57.8 | 54.4 | 52.8 | 55.8 | 91.1 | 66.5 
 | [MathShepherd-Mistral-7B](https://huggingface.co/peiyi9979/math-shepherd-mistral-7b-prm) | 47.0 | 44.0 | 50.3 | 47.1 | 49.4 | 44.5 | 41.3 | 47.7 | 45.7 | 47.2 | 48.6 | 86.1 | 60.7 
-| [ReasonEval-7B](https://huggingface.co/GAIR/ReasonEval-7B) | _60.0_ | **61.0** | 50.1 | **55.5** | _62.1_ | **65.9** | **61.5** | 66.0 | **63.9** | _55.6_ | _58.0_ | _99.5_ | _71.0_ 
+| [ReasonEval-7B](https://huggingface.co/GAIR/ReasonEval-7B) | 60.0 | **61.0** | 50.1 | **55.6** | 62.1 | _65.9_ | _61.5_ | 65.9 | _63.8_ | 55.6 | 57.9 | 99.5 | 71.0 
 | [RLHFlow-PRM-Mistral-8B](https://huggingface.co/RLHFlow/Llama3.1-8B-PRM-Mistral-Data) | 54.4 | 46.1 | 47.3 | 46.7 | 56.6 | 55.1 | 54.4 | 63.8 | 57.5 | 51.5 | 56.2 | 97.9 | 68.5 
-| [RLHFlow-PRM-Deepseek-8B](https://huggingface.co/RLHFlow/Llama3.1-8B-PRM-Deepseek-Data) | 54.2 | 46.4 | 48.9 | 47.6 | 55.7 | 55.0 | 53.2 | _66.2_ | 57.5 | 49.0 | 55.4 | **99.8** | 68.1 
-| [ReasonEval-34B](https://huggingface.co/GAIR/ReasonEval-34B) | **60.5** | _54.8_ | 48.1 | _51.5_ | **66.4** | _60.3_ | _57.8_ | **67.5** | _63.0_ | **57.7** | **64.3** | 97.2 | **73.1** 
-| **Avg.** | **50.1** | **46.9** | **48.1** | **47.5** | **52.6** | **48.1** | **46.5** | **53.9** | **50.3** | **48.6** | **51.3** | **93.0** | **64.3** |
+| [RLHFlow-PRM-Deepseek-8B](https://huggingface.co/RLHFlow/Llama3.1-8B-PRM-Deepseek-Data) | 54.2 | 46.4 | 48.9 | 47.6 | 55.7 | 55.0 | 53.2 | 66.2 | 57.5 | 49.0 | 55.4 | **99.8** | 68.1 
+| [ReasonEval-34B](https://huggingface.co/GAIR/ReasonEval-34B) | _60.5_ | _54.8_ | 48.1 | 51.5 | _66.4_ | 60.3 | 57.8 | _67.5_ | 63.0 | **57.7** | _64.3_ | 97.2 | _73.1_ 
+| [Qwen2.5-Math-PRM-7B](https://huggingface.co/Qwen/Qwen2.5-Math-PRM-7B) | **65.5** | 49.1 | **55.2** | _52.1_ | **71.8** | **67.2** | **66.3** | **78.5** | **71.0** | _57.7_ | **69.2** | _99.7_ | **75.6** |
+| **Avg.** | **51.4** | **47.1** | **48.7** | **47.9** | **54.2** | **49.7** | **48.1** | **55.9** | **52.0** | **49.3** | **52.8** | **93.6** | **65.2** |
 | [GPT-4o](https://openai.com/index/hello-gpt-4o/) | 66.8 | 57.0 | 62.4 | 59.7 | 72.0 | _69.7_ | 70.7 | 71.1 | 70.9 | **62.5** | 65.7 | 99.2 | **75.8** 
 | [o1-mini](https://openai.com/index/openai-o1-mini-advancing-cost-efficient-reasoning/)\$^\dagger$ | _68.8_ | 65.6 | _63.7_ | _64.6_ | **74.5** | 67.7 | **73.8** | **72.3** | **72.1** | _61.8_ | 64.8 | **100.0** | _75.5_ 
 | [Gemini-2.0-flash-exp](https://deepmind.google/technologies/gemini/flash/) | 66.0 | _67.2_ | 58.1 | 62.7 | 70.4 | 65.7 | 66.0 | 67.3 | 67.3 | 61.8 | **66.2** | 98.2 | 75.4 
 | [Gemini-2.0-thinking-exp-1219](https://ai.google.dev/gemini-api/docs/thinking-mode) | **68.8** | **68.5** | **63.8** | **66.2** | _72.9_ | **71.3** | _71.0_ | _71.8_ | _71.8_ | 60.3 | _65.7_ | _99.8_ | 75.3 
 | **Avg.** | **67.6** | **64.6** | **62.0** | **63.3** | **72.4** | **68.6** | **70.4** | **70.7** | **70.5** | **61.6** | **65.6** | **99.3** | **75.5** |
+
 
 
 
