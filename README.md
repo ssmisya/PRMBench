@@ -1,18 +1,22 @@
 
-
+<!--
 <p align="center" width="80%">
 <img src="./docs/assets/main_logo.png"  width="70%" height="70%">
 </p>
-
+-->
 # PRMBench: A Fine-grained and Challenging Benchmark for Process-Level Reward Models
 
 
 
 <!-- 🏠 [PRMBench Homepage](https://prmbench.github.io/) | 🤗 [Huggingface Datasets](https://huggingface.co/datasets/hitsmy/PRMBench_Preview) | 📑 [Paper](https://arxiv.org/abs/2501.03124) | 📚 [Documentation](docs/document.md) -->
-<div style="text-align:center">
-🏠 [PRMBench Homepage](https://prmbench.github.io/) | 🤗 [Huggingface Datasets](https://huggingface.co/datasets/hitsmy/PRMBench_Preview) | 📑 [Paper](https://arxiv.org/abs/2501.03124) | 📚 [Documentation](docs/document.md)
+<div align="center" style="font-family: Arial, sans-serif;">
+  <p>
+    <a href="https://prmbench.github.io/" style="text-decoration: none; font-weight: bold;">🌻 Homepage</a> •
+    <a href="https://huggingface.co/datasets/hitsmy/PRMBench_Preview" style="text-decoration: none; font-weight: bold;">🤗 Data</a> •
+    <a href="https://arxiv.org/abs/2501.03124" style="text-decoration: none; font-weight: bold;">📑 Paper</a> •
+    <a href="docs/document.md" style="text-decoration: none; font-weight: bold;">📖 Documentation</a>
+  </p>
 </div>
-
 
 <p align="center" width="80%">
   <img src="./docs/assets/main_fig.svg" width="70%" height="70%">
@@ -20,22 +24,19 @@
 <p align="center" style="font-size: 14px; color: gray;">
   <em>An overview of our <b>PRMBench</b>. The left part illustrates our data curation procedure. In the right part of the figure, we showcase demonstrations of our evaluation subjects and the relative performance of tested models.</em>
 </p>
-<!-- <p align="center" width="80%">
-<img src="./docs/assets/main_fig.svg"  width="70%" height="70%">
-</p>
-<p>An overview of our $PRMBench$. The left part illustrates our data curation procedure. In the right part of the figure, we showcase demonstrations of our evaluation subjects and the relative performance of tested models. </p> -->
+
 
 ## News
-[2025-01-16] We added Qwen2.5-Math-PRM-7B implementations to PRM Eval ToolKit, which becomes the new SOTA for open-source PRMs in PRMBench.
+🚀 [2025-01-16] We added Qwen2.5-Math-PRM-7B implementations to PRM Eval ToolKit, which becomes the new SOTA for open-source PRMs in PRMBench.
 
-[2025-01-08] We released our paper, code, dataset, and project page.
+✨ [2025-01-08] We released our paper, code, dataset, and project page.
 
 ## PRM Eval ToolKit
 > Accelerating the development of process-level reward models (PRMs) with `mr_eval`
 
 PRM Eval ToolKit comprises an automated evaluation framework `mr_eval`, along with a data generation and annotation framework `mr_annotate`. This is also the official github repo for $PRMBench$. The visualization scripts for $PRMBench$ can be found in `mr_visualize`.
 
-`mr_eval` is an auto PRM evaluation model which is adaptable to custom datasets and models, ensuring broad accessibility.
+`mr_eval` is an auto PRM evaluation framework adaptable to custom datasets and models, ensuring broad accessibility.
 
 
 
