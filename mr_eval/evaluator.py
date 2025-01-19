@@ -12,6 +12,8 @@ import yaml
 import argparse
 from torch.utils.data import DataLoader
 import torch.distributed as dist
+from accelerate.state import AcceleratorState
+from dataclasses import asdict
 
 from mr_eval.models import get_model
 from mr_eval.tasks import get_task_object, get_task_functions
@@ -33,6 +35,17 @@ class MREvaluator():
         self.tasks = self.task_args.task_name
         self.model = get_model(self.model_args.model)(**self.model_args.model_args)
         self.tokenizer = self.model.tokenizer
+
+        self.state = AcceleratorState()
+        self.batch_size = asdict(self.model_args).get("batch_size", 1)
+        if self.state.deepspeed_plugin:
+            deepspeed_config = self.state.deepspeed_plugin.deepspeed_config
+            # 修改配置
+            deepspeed_config["train_micro_batch_size_per_gpu"] = self.batch_size
+            # 应用修改
+            self.state.deepspeed_plugin.deepspeed_config = deepspeed_config
+        else:
+            logger.info("DeepSpeed is not initialized. Skipping DeepSpeed-specific configuration.")
         
     
     def evaluate(self):

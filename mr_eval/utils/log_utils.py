@@ -1,8 +1,11 @@
-import logging
+import logging, os
 from accelerate import Accelerator
 from accelerate.logging import get_logger as get_accelerator_logger
 
-def get_logger(name, level=logging.INFO, log_dir="/mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/scripts/logs/generated"):
+current_file_path = os.path.dirname(os.path.abspath(__file__))
+default_log_dir = f"{current_file_path}/../scripts/logs/generated"
+
+def get_logger(name, level=logging.INFO, log_dir=default_log_dir):
     try:
         logger = get_accelerator_logger(name)
     except:
@@ -13,8 +16,8 @@ def get_logger(name, level=logging.INFO, log_dir="/mnt/petrelfs/songmingyang/cod
     console_handler = logging.StreamHandler()
     console_handler.setLevel(level)
     # 创建文件处理器
-    file_handler = logging.FileHandler(f"{log_dir}/{name}.log")
-    file_handler.setLevel(level)
+    file_handler = logging.FileHandler(f"{log_dir}/{name}.log", mode='w')
+    file_handler.setLevel(logging.DEBUG)
 
     
     

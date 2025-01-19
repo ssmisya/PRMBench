@@ -30,15 +30,15 @@ class ReasonEval(prm):
         super().__init__(validity_threshold=validity_threshold, redundancy_threshold=redundancy_threshold)
         tokenizer = AutoTokenizer.from_pretrained(pretrained)
         if model_size == '7B':
-            model = ReasonEval_7B.from_pretrained(pretrained, device_map="cpu",torch_dtype=torch.bfloat16)
+            model = ReasonEval_7B.from_pretrained(pretrained,torch_dtype=torch.bfloat16)
         elif model_size == '34B':
-            model = ReasonEval_34B.from_pretrained(pretrained, device_map="cpu",torch_dtype=torch.bfloat16)
+            model = ReasonEval_34B.from_pretrained(pretrained,torch_dtype=torch.bfloat16)
         else:
             raise ValueError(f"Invalid model size: {model_size}")
         self.tokenizer = tokenizer
         self.model = model
+        self.origin_model = model
         self.accelerator = Accelerator()
-        self.model = self.model.to(self.accelerator.device)
         
 
 
@@ -68,11 +68,11 @@ class ReasonEval(prm):
                 separator_count += 1
             else:
                 adjusted_token_ids.append(token_id)
-        if isinstance(self.model,ReasonEval_7B):
+        if isinstance(self.origin_model,ReasonEval_7B):
             adjusted_token_ids = [1] + adjusted_token_ids # Adjusting to recover the first token_ids of the sentences
             adjusted_token_ids=torch.tensor(adjusted_token_ids)
             labeled_token_indices = labeled_token_indices[2:]  # Adjusting to skip the first two separator (begining and endding of the problems)
-        elif isinstance(self.model,ReasonEval_34B):
+        elif isinstance(self.origin_model,ReasonEval_34B):
             adjusted_token_ids=torch.tensor(adjusted_token_ids)
             labeled_token_indices = labeled_token_indices[1:]  # Adjusting to skip the first separator (endding of the problems)
         else:
@@ -89,7 +89,8 @@ class ReasonEval(prm):
         return res
     
     def respond(self, dataloader) -> List[Tuple[float, bool]]:
-        dataloader = self.accelerator.prepare(dataloader)
+        self.model, dataloader = self.accelerator.prepare(self.model, dataloader)
+        self.origin_model = self.accelerator.unwrap_model(self.model)
         self.accelerator.wait_for_everyone()
         self.model.eval()
         gen_kwargs = dataloader.dataset.gen_kwargs

@@ -173,3 +173,7 @@ mr_annotate/build_data/scripts/
 **/notebooks/
 **/notebook/
 test/
+
+# exclude
+
+! mr_eval/scripts/logs/generated/loc

@@ -30,14 +30,12 @@ class Llemma7bPRM(prm):
         
         self.model = AutoModelForCausalLM.from_pretrained(
                                                 pretrained, 
-                                                torch_dtype=torch.bfloat16,
-                                                device_map="cpu"
                                             )
         
         self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_pretrained)
         self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
         self.accelerator = Accelerator()
-        self.model = self.model.to(self.accelerator.device).eval()
+        
         
 
 
@@ -87,7 +85,8 @@ class Llemma7bPRM(prm):
         return res
     
     def respond(self, dataloader) -> List[Tuple[float, bool]]:
-        dataloader = self.accelerator.prepare(dataloader)
+        
+        self.model, dataloader = self.accelerator.prepare(self.model, dataloader)
         self.accelerator.wait_for_everyone()
         self.model.eval()
         gen_kwargs = dataloader.dataset.gen_kwargs

@@ -42,10 +42,10 @@ class SkyworkPRM(prm):
 
         self.tokenizer = AutoTokenizer.from_pretrained(pretrained, trust_remote_code=True)
         # self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
-        self.model = PRM_MODEL.from_pretrained(pretrained, device_map="cpu").eval()
+        self.model = PRM_MODEL.from_pretrained(pretrained, ).eval()
         
         self.accelerator = Accelerator()
-        self.model = self.model.to(self.accelerator.device)
+        
 
     def getitem_function(self,meta_data,index):
         data_idx = meta_data[index]["idx"]
@@ -78,7 +78,7 @@ class SkyworkPRM(prm):
         return res
     
     def respond(self, dataloader) -> List[Tuple[float, bool]]:
-        dataloader = self.accelerator.prepare(dataloader)
+        self.model, dataloader = self.accelerator.prepare(self.model, dataloader)
         self.accelerator.wait_for_everyone()
         self.model.eval()
         gen_kwargs = dataloader.dataset.gen_kwargs

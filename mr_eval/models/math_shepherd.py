@@ -33,10 +33,10 @@ class MathShepherd(prm):
         self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
         self.candidate_tokens = self.tokenizer.encode(f"{good_token} {bad_token}")[1:] # [648, 387]
         self.step_tag_id = self.tokenizer.encode(f"{step_tag}")[-1] # 12902
-        self.model = AutoModelForCausalLM.from_pretrained(pretrained, device_map="cpu").eval()
+        self.model = AutoModelForCausalLM.from_pretrained(pretrained,).eval()
 
         self.accelerator = Accelerator()
-        self.model = self.model.to(self.accelerator.device)
+        
         
 
 
@@ -63,7 +63,7 @@ class MathShepherd(prm):
         return res
     
     def respond(self, dataloader) -> List[Tuple[float, bool]]:
-        dataloader = self.accelerator.prepare(dataloader)
+        self.model, dataloader = self.accelerator.prepare(self.model, dataloader)
         self.accelerator.wait_for_everyone()
         self.model.eval()
         gen_kwargs = dataloader.dataset.gen_kwargs

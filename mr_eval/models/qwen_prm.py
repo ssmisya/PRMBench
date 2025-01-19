@@ -2,6 +2,7 @@ import abc
 import hashlib
 import json
 import os
+import logging
 from typing import List, Optional, Tuple, Type, TypeVar, Union
 
 from loguru import logger as eval_logger
@@ -17,8 +18,10 @@ from .abstract_model import prm
 from ..utils.utils import *
 from ..utils.log_utils import get_logger
 from ..utils.model_utils import remove_step_prefix
+from accelerate.logging import get_logger as get_accelerator_logger
 
-
+# accelerate_logger = logging.getLogger("debug")
+# accelerate_logger.setLevel(logging.DEBUG)
 logger = get_logger(__name__)
 class QwenPRM(prm):
     def __init__(
@@ -31,13 +34,12 @@ class QwenPRM(prm):
         self.tokenizer = AutoTokenizer.from_pretrained(pretrained, trust_remote_code=True)
         self.model = AutoModel.from_pretrained(
             pretrained, 
-            device_map='cpu', 
             torch_dtype=torch.bfloat16,
             trust_remote_code=True,
         ).eval()
                 
         self.accelerator = Accelerator()
-        self.model = self.model.to(self.accelerator.device)
+        
         
         self.step_separator = "<extra_0>"
         self.step_separator_token_id = self.tokenizer.encode(self.step_separator)[0]
@@ -80,7 +82,7 @@ class QwenPRM(prm):
         return res
     
     def respond(self, dataloader) -> List[Tuple[float, bool]]:
-        dataloader = self.accelerator.prepare(dataloader)
+        self.model, dataloader = self.accelerator.prepare(self.model, dataloader)
         self.accelerator.wait_for_everyone()
         self.model.eval()
         gen_kwargs = dataloader.dataset.gen_kwargs
@@ -90,10 +92,11 @@ class QwenPRM(prm):
             return
         with torch.no_grad():
             for batch_idx, batch in enumerate(dataloader):
+                
                 idx = batch['idx']
                 input_ids = batch['input_ids']
                 attention_mask = batch['attention_mask']
-
+                # print(f"data device: {input_ids.device}, current device: {self.accelerator.device}")
                 scores = self.model(input_ids,
                                     attention_mask,).logits
                 token_mask = input_ids == self.step_separator_token_id
