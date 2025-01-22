@@ -4,13 +4,10 @@ import re
 from copy import deepcopy
 import argparse
 from openai import OpenAI
-import google.generativeai as genai
-
 from prompts import prompt_dict
 
 import os,sys,openai,time
 from mr_eval.utils.utils import *
-
 
 from copy import deepcopy
 from tqdm import tqdm
@@ -104,25 +101,15 @@ def gpt4o_inference(
     output_file,
     failed_case_file,
     token = "",
-    model_name = "gemini-2.0-flash-exp",
+    model_name = "gpt-4o",
     endpoint = "",
     classification = "all",
 ):
-    genai.configure(api_key=token)
-
-    generation_config = {
-        "temperature": 1,
-        "top_p": 0.95,
-        "top_k": 40,
-        "max_output_tokens": 8192,
-        "response_mime_type": "text/plain",
-    }
-
-    model = genai.GenerativeModel(
-        model_name=model_name,
-        generation_config=generation_config,
-    )
     
+    client = OpenAI(
+        base_url=endpoint,
+        api_key=token,
+    )
     for prm_item in tqdm(
             input_data, 
             total=len(input_data), 
@@ -139,47 +126,38 @@ def gpt4o_inference(
         
         prompt = prompt_dict[classification]
         try:
-            messages=[
-                {
-                    "role": "user",
-                    "parts": [
-                        prompt["system"]
-                    ],
-                },
-                {
-                    "role": "user",
-                    "parts": [
-                        prompt["few_shot"][0][0]
-                    ]
-                },
-                {
-                    "role": "model",
-                    "parts": [
-                        prompt["few_shot"][0][1],
-                    ]
-                },
-                {
-                    "role": "user",
-                    "parts": [
-                        prompt["few_shot"][1][0],
-                    ]
-                },  
-                {
-                    "role": "model",
-                    "parts": [
-                        prompt["few_shot"][1][1],
-                    ]
-                },
-                # {
-                #     "role": "user",
-                #     "parts": [
-                #         latex_str,
-                #     ]
-                # }
-            ]
-            chat_session = model.start_chat(messages)
-            response = chat_session.send_message(latex_str)
-            resp = response.text
+            response = client.chat.completions.create(
+                messages=[
+                    {
+                        "role": "system",
+                        "content": prompt["system"],
+                    },
+                    {
+                        "role": "user",
+                        "content": prompt["few_shot"][0][0],
+                    },
+                    {
+                        "role": "assistant",
+                        "content": prompt["few_shot"][0][1],
+                    },
+                    {
+                        "role": "user",
+                        "content": prompt["few_shot"][1][0],
+                    },  
+                    {
+                        "role": "assistant",
+                        "content": prompt["few_shot"][1][1],
+                    },
+                    {
+                        "role": "user",
+                        "content": latex_str,
+                    }
+                ],
+                temperature=1.0,
+                top_p=1.0,
+                model=model_name,
+            )
+            resp = response.choices[0].message.content  
             json_object = json_str_to_object(resp)
             
             if json_object:
