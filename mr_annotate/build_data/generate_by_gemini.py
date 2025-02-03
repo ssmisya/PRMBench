@@ -10,7 +10,7 @@ from prompts import prompt_dict
 
 import os,sys,openai,time
 from mr_eval.utils.utils import *
-
+from mr_eval.utils.model_utils import extract_nested_json
 
 from copy import deepcopy
 from tqdm import tqdm
@@ -59,6 +59,9 @@ def get_best_answer_by_item(item,return_type="shepherd"):
         answer_str =  best_answers
     return answer_str
 
+
+
+
 def get_latex_str(question,answer):
     res = f"Question:\n\n{question}\n\nAnswer:\n\n{answer}"
     return res
@@ -98,6 +101,20 @@ def modify_file_name(file_name: str, add_str: str) -> str:
     new_name = f"{base_name}_{add_str}{ext}"
     return os.path.join(os.path.dirname(file_name), new_name)
         
+def from_stem_item_to_input(stem_item):
+    question = stem_item["Question"]
+    options = stem_item["Options"]
+    question = f"Question:\n\n{question} {options}\n\n"
+    steps = stem_item["Model_Solution_Steps"]
+    step_str = "Answer:\n\n"
+    
+    for step_idx,step in enumerate(steps):
+        step_text = f"Step {step_idx+1}. {step}\n\n"
+        step_str += step_text
+        
+    res = f"{question}{step_str}"
+    return {"question":question,"input":res}
+
 def gpt4o_inference(
     input_data,
     processed_ids,
@@ -106,10 +123,14 @@ def gpt4o_inference(
     token = "",
     model_name = "gemini-2.0-flash-exp",
     endpoint = "",
-    classification = "all",
+    classification = None,
+    max_retry = 5,
+    retry_interval = 5,
+    retry_increase = 5,
 ):
-    genai.configure(api_key=token)
-
+    # genai.configure(api_key=token)
+    api_key = os.environ.get("GEMINI_API_KEY", token)
+    genai.configure(api_key=api_key)
     generation_config = {
         "temperature": 1,
         "top_p": 0.95,
@@ -133,69 +154,79 @@ def gpt4o_inference(
         idx = prm_item["idx"]
         if str(idx) in processed_ids:
             continue
-        question = prm_item['question']["problem"]
-        best_latex = get_best_answer_by_item(prm_item,return_type="str")
-        latex_str = get_latex_str(question,best_latex)
-        
+        # question = prm_item['question']["problem"]
+        # best_latex = get_best_answer_by_item(prm_item,return_type="str")
+        # latex_str = get_latex_str(question,best_latex)
+        inputs = from_stem_item_to_input(prm_item)
+        latex_str = inputs["input"]
+        question = inputs["question"]
         prompt = prompt_dict[classification]
-        try:
-            messages=[
-                {
-                    "role": "user",
-                    "parts": [
-                        prompt["system"]
-                    ],
-                },
-                {
-                    "role": "user",
-                    "parts": [
-                        prompt["few_shot"][0][0]
-                    ]
-                },
-                {
-                    "role": "model",
-                    "parts": [
-                        prompt["few_shot"][0][1],
-                    ]
-                },
-                {
-                    "role": "user",
-                    "parts": [
-                        prompt["few_shot"][1][0],
-                    ]
-                },  
-                {
-                    "role": "model",
-                    "parts": [
-                        prompt["few_shot"][1][1],
-                    ]
-                },
-                # {
-                #     "role": "user",
-                #     "parts": [
-                #         latex_str,
-                #     ]
-                # }
-            ]
-            chat_session = model.start_chat(messages)
-            response = chat_session.send_message(latex_str)
-            resp = response.text
-            json_object = json_str_to_object(resp)
-            
-            if json_object:
-                json_object["idx"] = idx
-                json_object["question"] = question
-                json_object["classification"] = classification
-                append_jsonl(json_object,output_file,)
-            else:
-                target_str = f"{idx}:{resp}"
-                append_jsonl(target_str,failed_case_file)
-        except Exception as e:
-            logger.error(f"Failed to process {idx}.")
-            logger.error(e)
-            # target_str = f"{idx}:{latex_str}"
-            time.sleep(1)
-            continue
+
+        for retry in range(max_retry):
+            try:
+                messages=[
+                    {
+                        "role": "user",
+                        "parts": [
+                            prompt["system"]
+                        ],
+                    },
+                    {
+                        "role": "user",
+                        "parts": [
+                            prompt["few_shot"][0][0]
+                        ]
+                    },
+                    {
+                        "role": "model",
+                        "parts": [
+                            prompt["few_shot"][0][1],
+                        ]
+                    },
+                    {
+                        "role": "user",
+                        "parts": [
+                            prompt["few_shot"][1][0],
+                        ]
+                    },  
+                    {
+                        "role": "model",
+                        "parts": [
+                            prompt["few_shot"][1][1],
+                        ]
+                    },
+                    # {
+                    #     "role": "user",
+                    #     "parts": [
+                    #         latex_str,
+                    #     ]
+                    # }
+                ]
+                chat_session = model.start_chat(history=messages)
+                response = chat_session.send_message(latex_str)
+                resp = response.text
+                # json_object = json_str_to_object(resp)
+                json_object = extract_nested_json(resp)
+                # if not json_object:
+                #     json_object = extract_nested_json(resp)
+                if json_object:
+                    json_object["idx"] = idx
+                    json_object["question"] = question
+                    json_object["classification"] = classification
+                    append_jsonl(json_object,output_file,)
+                    break
+                else:
+                    target_str = f"{idx}:{resp}"
+                    append_jsonl(target_str,failed_case_file)
+                    logger.error(f"Failed to process {idx}.")
+                    time.sleep(retry_interval + retry * retry_increase)
+                    continue
+            except Exception as e:
+                logger.error(f"Failed to process {idx}.")
+                logger.error(e)
+                # target_str = f"{idx}:{latex_str}"
+                time.sleep(retry_interval + retry * retry_increase)
+                continue
 
 def load_data(input_file,output_file):
     res = process_jsonl(input_file)

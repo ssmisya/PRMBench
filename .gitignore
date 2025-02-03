@@ -166,6 +166,8 @@ mr_eval/scripts/bash_scripts/
 mr_eval/scripts/configs/
 mr_eval/scripts/logs/
 
+mr_eval/bon_eval/scripts/
+
 mr_annotate/build_data/selection_of_data/
 mr_annotate/build_data/scripts/
 

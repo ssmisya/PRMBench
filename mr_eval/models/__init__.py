@@ -18,6 +18,7 @@ AVAILABLE_MODELS = {
     "gemini_models": "GeminiModels",
     "qwen_qwq": "QwenQwQ",
     "qwen_prm": "QwenPRM",
+    "vllm_models": "VllmModels",
 }
 
 

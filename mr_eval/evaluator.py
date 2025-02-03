@@ -64,8 +64,9 @@ class MREvaluator():
                 task_args = self.task_args,
                 model_args = self.model_args,
             )
+            num_workers = self.model_args.num_workers
             data_collator = DataCollatorForSupervisedDataset(tokenizer=self.tokenizer, max_length=task_config.generation_config.max_length, padding_side=dataset.padding_side)
-            dataloader = DataLoader(dataset, batch_size=self.model_args.batch_size, num_workers=4, collate_fn=data_collator)
+            dataloader = DataLoader(dataset, batch_size=self.model_args.batch_size, num_workers=num_workers, collate_fn=data_collator)
             self.model.respond(dataloader)
             res_log = dataset.evaluate()
             if is_main_process():

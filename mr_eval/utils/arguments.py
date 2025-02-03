@@ -26,6 +26,7 @@ class ModelArguments:
     model: Optional[str] = field(default="reasoneval")
     model_args: Optional[str] = field(default="pretrained=EleutherAI/pythia-160m,dtype=float32")
     batch_size: Optional[int] = field(default=1)
+    num_workers: Optional[int] = field(default=4)
 
 @dataclass
 class TaskArguments:

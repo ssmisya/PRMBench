@@ -10,7 +10,6 @@ from copy import deepcopy
 from torch.utils.data import DataLoader,Dataset
 from dataclasses import dataclass
 from typing import Dict, Sequence
-from accelerate import PartialState  
 from tqdm import tqdm
 import os
 import torch.distributed as dist
@@ -154,7 +153,7 @@ class DataCollatorForSupervisedDataset:
 
     def __call__(self, instances: Sequence[Dict]) -> Dict[str, torch.Tensor]:
         
-        if "model_type" in instances[0] and instances[0]["model_type"] == "openai":
+        if "model_type" in instances[0] and (instances[0]["model_type"] == "openai" or instances[0]["model_type"] == "vllm"):
             assert len(instances) == 1
             return instances[0]
         
