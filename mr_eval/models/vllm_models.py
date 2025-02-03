@@ -81,10 +81,23 @@ class VllmModels(prm):
     
     def respond(self, dataloader) -> List[Tuple[float, bool]]:
 
-        gen_kwargs = dataloader.dataset.gen_kwargs
+        # gen_kwargs = dataloader.dataset.gen_kwargs
+        sampling_params = SamplingParams(
+            temperature = self.generation_config.get("temperature", 0.0),
+            top_k = self.generation_config.get("top_k", -1),
+            top_p = self.generation_config.get("top_p", 1.0),
+            max_tokens = self.generation_config.get("max_length", 2048),
+        )
+        
+        
         progress_bar = tqdm_rank0(len(dataloader), desc="Model Responding")
         
         dataloader_iter = iter(dataloader)
+        # import debugpy
+        # debugpy.listen(address = ('0.0.0.0', 7119))
+        # debugpy.wait_for_client() 
+        # breakpoint() # 在下一句代码处暂停
+        # dist.barrier()
         with torch.no_grad():
             stop_flag = False
             while not stop_flag:
@@ -102,7 +115,7 @@ class VllmModels(prm):
                         stop_flag = True
                         break
                     
-                outputs = self.model.chat(conversation)
+                outputs = self.model.chat(messages, sampling_params = sampling_params)
                 
                 for idx, output in zip(idxs, outputs):
                     response = output.outputs[0].text
@@ -117,14 +130,14 @@ class VllmModels(prm):
                             )
                             res = dict(scores=score_dict, idx=idx, validity=True)
                         else:
-                            res = dict(validity=False, idx=idx)
+                            res = dict(validity=False, idx=idx, original_response=response)
                         dataloader.dataset.store_results(res)
                         # log = dict(idx = current_idx, response = current_response, scores = scores, result = res)
                         # dataloader.dataset.save_result_item_into_log(log,self.log_save_dir)
                     except:
-                        current_response = response[i]
+                        current_response = response
                         logger.error(f"Error in responding to idx {idx}")
-                        res = dict(validity=False, idx=idx)
+                        res = dict(validity=False, idx=idx, original_response=current_response)
                         dataloader.dataset.store_results(res)
                         # log = dict(idx = current_idx, response = current_response, scores = None, result = res)
                         # dataloader.dataset.save_result_item_into_log(log,self.log_save_dir)

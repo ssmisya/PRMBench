@@ -34,8 +34,11 @@ class MREvaluator():
         self.script_args = script_args
         self.tasks = self.task_args.task_name
         self.model = get_model(self.model_args.model)(**self.model_args.model_args)
-        self.tokenizer = self.model.tokenizer
-
+        try:
+            self.tokenizer = self.model.tokenizer
+        except AttributeError:
+            self.tokenizer = None
+            
         self.state = AcceleratorState()
         self.batch_size = asdict(self.model_args).get("batch_size", 1)
         if self.state.deepspeed_plugin:

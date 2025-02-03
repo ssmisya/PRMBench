@@ -1,4 +1,4 @@
-task_name: "prmtest_classified"
+task_name: "prmbench_bon"
 dataset_path: data
 dataset_type: "dir_of_jsonl"
 generation_config:

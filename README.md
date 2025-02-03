@@ -27,6 +27,8 @@
 
 
 ## News
+🚀 [2025-02-04] PRM Eval ToolKit now supports inferencing with VLLM.
+
 🚀 [2025-01-20] PRM Eval ToolKit now supports FSDP and DeepSpeed, which means you can evaluate 72B models utilizing our framework. Moreover, we add results of Qwen2.5-Math-PRM-72B on PRMBench.
 
 🚀 [2025-01-16] We added Qwen2.5-Math-PRM-7B implementations to PRM Eval ToolKit, which becomes the new SOTA for open-source PRMs in PRMBench.

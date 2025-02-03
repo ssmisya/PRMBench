@@ -70,9 +70,11 @@ class BaseEvalDataset(Dataset):
             self.padding_side = "left"
         else:
             self.padding_side = "right"
-            
-        if dist.is_available() and dist.is_initialized():
-            dist.barrier()
+        
+        
+        
+        # if dist.is_available() and dist.is_initialized():
+        #     dist.barrier()
             
     
     def __getitem__(self, index):
@@ -125,7 +127,7 @@ class BaseEvalDataset(Dataset):
         
         
     def collect_results_from_multi_process(self):
-        if dist.is_available() and dist.is_initialized():
+        if self.model_name != "vllm_models" and dist.is_available() and dist.is_initialized():
             dist.barrier()
             self.results = gather_dict_lists(self.results)
             results_dict = {}
