@@ -42,7 +42,7 @@ class LLaMA318BPRM(prm):
         self.positive_token = positive_token
         
         self.tokenizer = AutoTokenizer.from_pretrained(pretrained, trust_remote_code=True)
-        self.model = AutoModelForCausalLM.from_pretrained(pretrained,).eval()
+        self.model = AutoModelForCausalLM.from_pretrained(pretrained, device_map="cpu").eval()
         
         self.accelerator = Accelerator()
         
@@ -74,8 +74,9 @@ class LLaMA318BPRM(prm):
         return res
     
     def respond(self, dataloader) -> List[Tuple[float, bool]]:
-        
-        self.model, dataloader = self.accelerator.prepare(self.model, dataloader)
+        # self.model, dataloader = self.accelerator.prepare(self.model, dataloader)
+        dataloader = self.accelerator.prepare(dataloader)
+        self.model = self.model.to(self.accelerator.device)
         self.accelerator.wait_for_everyone()
         self.model.eval()
         gen_kwargs = dataloader.dataset.gen_kwargs

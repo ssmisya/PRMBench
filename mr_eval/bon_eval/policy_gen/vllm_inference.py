@@ -87,8 +87,8 @@ class VllmInference():
             # Load meta data
             question = item["question"]
             answer = item["answer"]
-            idx = str(idx)
-            res = {"id":idx,"question":question,"answer":answer}
+            item_idx = f"{self.task}_{idx}"
+            res = {"id":item_idx,"question":question,"answer":answer}
             self.data.append(res)
             
             # Load conversation

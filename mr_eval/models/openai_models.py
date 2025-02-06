@@ -1,16 +1,9 @@
-import hashlib
-import json
 import os
-from typing import List, Optional, Tuple, Type, TypeVar, Union
+from typing import List, Optional, Tuple
 
 from loguru import logger as eval_logger
 from tqdm import tqdm
-from transformers import AutoTokenizer, AutoTokenizer, AutoModelForCausalLM,MistralForTokenClassification
-import torch
-import torch.nn as nn
-from transformers.configuration_utils import PretrainedConfig
 from accelerate import Accelerator
-import torch.nn.functional as F
 from openai import OpenAI
 from datetime import datetime
 
@@ -129,11 +122,19 @@ class OpenaiModels(prm):
                         }
                     )
                     try:
+                        # ## Debug
+                        # import debugpy
+                        # debugpy.listen(address = ('0.0.0.0', 7119))
+                        # debugpy.wait_for_client() 
+                        # breakpoint() # 在下一句代码处暂停
+                        # # dist.barrier()
+                        
                         response = self.client.chat.completions.create(
                                 messages=gpt_message,
                                 temperature=self.default_tempreture,
                                 model=self.model_name,
-                            )
+                        )
+
                         response = response.choices[0].message.content  
                         scores = process_policy_lm_evaluation_response(response)
                         if scores:

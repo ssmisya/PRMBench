@@ -42,10 +42,9 @@ class SkyworkPRM(prm):
 
         self.tokenizer = AutoTokenizer.from_pretrained(pretrained, trust_remote_code=True)
         # self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
-        self.model = PRM_MODEL.from_pretrained(pretrained, ).eval()
-        
+        self.model = PRM_MODEL.from_pretrained(pretrained, device_map="cpu").eval()
         self.accelerator = Accelerator()
-        
+        assert not self.accelerator.state.distributed_type == 'DEEPSPEED', "DeepSpeed is not supported for Skywork PRM."
 
     def getitem_function(self,meta_data,index):
         data_idx = meta_data[index]["idx"]
@@ -78,7 +77,8 @@ class SkyworkPRM(prm):
         return res
     
     def respond(self, dataloader) -> List[Tuple[float, bool]]:
-        self.model, dataloader = self.accelerator.prepare(self.model, dataloader)
+        dataloader = self.accelerator.prepare(dataloader)
+        self.model = self.model.to(self.accelerator.device)
         self.accelerator.wait_for_everyone()
         self.model.eval()
         gen_kwargs = dataloader.dataset.gen_kwargs

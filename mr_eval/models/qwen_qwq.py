@@ -38,7 +38,7 @@ class QwenQwQ(prm):
         
         self.tokenizer = AutoTokenizer.from_pretrained(pretrained, trust_remote_code=True)
         # self.tokenizer.padding_side = "left"
-        self.model = AutoModelForCausalLM.from_pretrained(pretrained,).eval()
+        self.model = AutoModelForCausalLM.from_pretrained(pretrained, device_map = "cpu").eval()
         self.log_save_dir = log_save_dir
         
         self.accelerator = Accelerator()

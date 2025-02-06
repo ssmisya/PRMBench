@@ -89,6 +89,8 @@ def evaluate_function(results,meta_data):
     other_predictions = [prediction for prediction in filtered_results if prediction["idx"] not in correct_ids_dict]
     correct_model_response_acc_dict = {}
     
+    total_num = total_num - len(correct_predictions)
+    
     ## First evaluate the correct samples
     for prediction in correct_predictions:
         idx = prediction["idx"]

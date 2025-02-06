@@ -48,10 +48,10 @@ def main():
                 assert len(config) == 1, "If config is not a list, it should be a dictionary or NoneType"
                 raise ValueError("Config should be a list of dictionaries.")
             
-        evaluator = MREvaluator(model_args, task_args, script_args)
-        evaluator.evaluate()
-        del evaluator
-        logger.info(f"Finished evaluating on the No. {idx+1} config, toal {len(config)} configs.")
+            evaluator = MREvaluator(model_args, task_args, script_args)
+            evaluator.evaluate()
+            del evaluator
+            logger.info(f"Finished evaluating on the No. {idx+1} config, toal {len(config)} configs.")
     else:
         evaluator = MREvaluator(model_args, task_args, script_args)
         evaluator.evaluate()

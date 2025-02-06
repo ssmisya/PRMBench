@@ -30,9 +30,9 @@ class ReasonEval(prm):
         super().__init__(validity_threshold=validity_threshold, redundancy_threshold=redundancy_threshold)
         tokenizer = AutoTokenizer.from_pretrained(pretrained)
         if model_size == '7B':
-            model = ReasonEval_7B.from_pretrained(pretrained,torch_dtype=torch.bfloat16)
+            model = ReasonEval_7B.from_pretrained(pretrained,torch_dtype=torch.bfloat16,)
         elif model_size == '34B':
-            model = ReasonEval_34B.from_pretrained(pretrained,torch_dtype=torch.bfloat16)
+            model = ReasonEval_34B.from_pretrained(pretrained,torch_dtype=torch.bfloat16,)
         else:
             raise ValueError(f"Invalid model size: {model_size}")
         self.tokenizer = tokenizer
@@ -54,7 +54,7 @@ class ReasonEval(prm):
         for step in steps:
             cleaned_step = remove_step_prefix(step)
             combined_steps += cleaned_step + step_separator
-        prompt = PROMPT_FORMAT.format(input=question)
+        prompt = PROMPT_FORMAT.format(input = question)
         tokenized_result = self.tokenizer(prompt + step_separator + combined_steps)['input_ids']
         
         ## Separating labels and adjusting token IDs
