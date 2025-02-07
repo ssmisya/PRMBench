@@ -27,13 +27,13 @@
 
 
 ## News
-🚀 [2025-02-07] We’ve added a collection of results from various open-source LLMs used as critic models. You can check out the results [here](https://prmbench.github.io/#leaderboard_test).
+🚀 [2025-02-07] We've added a collection of results from various open-source LLMs used as critic models. You can check out the results [here](https://prmbench.github.io/#leaderboard_test).
 
 ⚡ [2025-02-04] PRM Eval ToolKit now supports inferencing with VLLM.
 
 🛠️ [2025-01-20] PRM Eval ToolKit now supports FSDP and DeepSpeed, which means you can evaluate 72B models utilizing our framework. Moreover, we add results of Qwen2.5-Math-PRM-72B on PRMBench.
 
-🚀 [2025-01-16] We added Qwen2.5-Math-PRM-7B implementations to PRM Eval ToolKit, which becomes the new SOTA for open-source PRMs in PRMBench.
+🛠️ [2025-01-16] We added Qwen2.5-Math-PRM-7B implementations to PRM Eval ToolKit, which becomes the new SOTA for open-source PRMs in PRMBench.
 
 ✨ [2025-01-08] We released our paper, code, dataset, and project page.
 
@@ -46,7 +46,7 @@ PRM Eval ToolKit comprises an automated evaluation framework `mr_eval`, along wi
 
 
 
-## Installation
+## 🛠️ Installation
 
 ```bash
 git clone https://github.com/ssmisya/PRMBench
@@ -61,7 +61,7 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-## Example Usages
+## 📝 Example Usages
 
 We released some example scripts/configs to demonstrate how to use our toolkit. You can find them in the `mr_eval/scripts` directory.
 
@@ -111,15 +111,15 @@ Config file example:
 
 For detailed information and config setting please refer to our [documentation](docs/README.md).
 
-## PRMBench LeaderBoard
+## 🏆 PRMBench LeaderBoard
 
 The leaderboard is available [here](https://prmbench.github.io/#leaderboard_test).
 
-## Add Customized Model and Dataset
+## 📦 Add Customized Model and Dataset
 
 Please refer to our [documentation](docs/README.md).
 
-## Data Format for PRMBench
+## 📈 Data Format for PRMBench
 
 In PRMBench, our data format can be formulated as follows:
 
