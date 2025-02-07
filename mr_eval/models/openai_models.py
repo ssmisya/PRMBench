@@ -25,7 +25,7 @@ class OpenaiModels(prm):
             api_key = os.environ.get("OPENAI_API_KEY",""),
             max_retry = 5,
             retry_interval = 5,
-            log_save_dir = "./mr_eval/scripts/logs/generated/openai_models.jsonl",
+            # log_save_dir = "./mr_eval/scripts/logs/generated/openai_models.jsonl",
             validity_threshold = 0,
             redundancy_threshold = 0,
             shots=2,
@@ -49,10 +49,10 @@ class OpenaiModels(prm):
         self.max_retry = max_retry
         self.retry_interval = retry_interval
         self.tokenizer = None
-        self.log_save_dir = log_save_dir
-        current_time = datetime.now()
-        file_name_time = current_time.strftime("%Y-%m-%d_%H-%M-%S")
-        self.log_save_dir = f"{log_save_dir[:-5]}_{file_name_time}.jsonl"
+        # self.log_save_dir = log_save_dir
+        # current_time = datetime.now()
+        # file_name_time = current_time.strftime("%Y-%m-%d_%H-%M-%S")
+        # self.log_save_dir = f"{log_save_dir[:-5]}_{file_name_time}.jsonl"
         
         self.prompt = PROMPT_DICT["policy_model_as_an_evaluator"]
         
@@ -93,6 +93,7 @@ class OpenaiModels(prm):
             for batch in tqdm(dataloader, desc="Model Responding"):
                 idx = batch['idx']
                 inputs = batch['inputs']
+                fail_times = 0
                 for i in range(self.max_retry):
                     fail_flag = False
                     gpt_message = [
@@ -146,19 +147,21 @@ class OpenaiModels(prm):
                             )
                             res = dict(scores=score_dict, idx=idx, validity=True)
                         else:
-                            res = dict(validity=False, idx=idx)
+                            res = dict(validity=False, idx=idx, original_response = response)
                         dataloader.dataset.store_results(res)
                         log = dict(idx = idx, inputs = inputs, response = response, scores = scores, result = res)
-                        dataloader.dataset.save_result_item_into_log(log,self.log_save_dir)
+                        # dataloader.dataset.save_result_item_into_log(log,self.log_save_dir)
                         break
                     except Exception as e:
-                        eval_logger.error(f"Error: {e}, retrying in {self.retry_interval} seconds")
+                        eval_logger.error(f"Error: {e}, retrying in {self.retry_interval + fail_times*self.retry_interval} seconds")
+                        fail_times += 1
                         fail_flag = True
-                        time.sleep(self.retry_interval)
+                        time.sleep(self.retry_interval + fail_times*self.retry_interval)
                     except AssertionError as e:
-                        eval_logger.error(f"Error: {e}, retrying in {self.retry_interval} seconds")
+                        eval_logger.error(f"Error: {e}, retrying in {self.retry_interval + fail_times*self.retry_interval} seconds")
+                        fail_times += 1
                         fail_flag = True
-                        time.sleep(self.retry_interval)
+                        time.sleep(self.retry_interval + fail_times*self.retry_interval)
 
                 if i == self.max_retry - 1 and fail_flag:
                     eval_logger.error(f"Failed to get response for idx: {idx}")
@@ -166,7 +169,7 @@ class OpenaiModels(prm):
                     dataloader.dataset.store_results(res)
                     try:
                         log = dict(idx = idx, inputs = inputs, response = response, scores = None, result = res)
-                        dataloader.dataset.save_result_item_into_log(log,self.log_save_dir)
+                        # dataloader.dataset.save_result_item_into_log(log,self.log_save_dir)
                     except:
                         pass
                     

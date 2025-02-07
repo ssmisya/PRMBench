@@ -34,7 +34,7 @@ class prm(abc.ABC):
         self.generation_config = generation_configs
         self.generation_config["max_length"] = generation_configs.get("max_length", 512)
         self.generation_config["temperature"] = generation_configs.get("temperature", 0.0)
-        self.generation_config["top_k"] = generation_configs.get("top_k", -1)
+        self.generation_config["top_k"] = generation_configs.get("top_k", 1)
         self.generation_config["top_p"] = generation_configs.get("top_p", 1.0)
         
  

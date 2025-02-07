@@ -1,18 +1,12 @@
 import hashlib
 import json
 import os
-from typing import List, Optional, Tuple, Type, TypeVar, Union
+from typing import List, Optional, Tuple
 
 from loguru import logger as eval_logger
 from tqdm import tqdm
-from transformers import AutoTokenizer, AutoTokenizer, AutoModelForCausalLM,MistralForTokenClassification
-import torch
-import torch.nn as nn
-from transformers.configuration_utils import PretrainedConfig
+
 from accelerate import Accelerator
-import torch.nn.functional as F
-from openai import OpenAI
-from datetime import datetime
 
 from .abstract_model import prm
 from ..utils.utils import *
@@ -36,7 +30,7 @@ class GeminiModels(prm):
             retry_interval = 5,
             validity_threshold = 0,
             redundancy_threshold = 0,
-            log_save_dir = "mr_eval/scripts/logs/generated/gemini.jsonl",
+            # log_save_dir = "mr_eval/scripts/logs/generated/gemini.jsonl",
             shots=2,
         ) -> None:
         
@@ -51,10 +45,10 @@ class GeminiModels(prm):
         self.max_retry = max_retry
         self.retry_interval = retry_interval
         self.tokenizer = None
-        self.log_save_dir = log_save_dir
-        current_time = datetime.now()
-        file_name_time = current_time.strftime("%Y-%m-%d_%H-%M-%S")
-        self.log_save_dir = f"{log_save_dir[:-5]}_{file_name_time}.jsonl"
+        # self.log_save_dir = log_save_dir
+        # current_time = datetime.now()
+        # file_name_time = current_time.strftime("%Y-%m-%d_%H-%M-%S")
+        # self.log_save_dir = f"{log_save_dir[:-5]}_{file_name_time}.jsonl"
         
         genai.configure(api_key=self.api_key)
 
@@ -149,10 +143,10 @@ class GeminiModels(prm):
                             )
                             res = dict(scores=score_dict, idx=idx, validity=True)
                         else:
-                            res = dict(validity=False, idx=idx)
+                            res = dict(validity=False, idx=idx, original_response=response)
                         dataloader.dataset.store_results(res)
                         log = dict(idx = idx, inputs = inputs, response = response, scores = scores, result = res)
-                        dataloader.dataset.save_result_item_into_log(log,self.log_save_dir)
+                        # dataloader.dataset.save_result_item_into_log(log,self.log_save_dir)
                         break
                     except Exception as e:
                         eval_logger.error(f"Error: {e}, retrying in {self.retry_interval + fail_times*self.retry_interval} seconds")
@@ -171,7 +165,7 @@ class GeminiModels(prm):
                     dataloader.dataset.store_results(res)
                     try:
                         log = dict(idx = idx, inputs = inputs, response = response, scores = None, result = res)
-                        dataloader.dataset.save_result_item_into_log(log,self.log_save_dir)
+                        # dataloader.dataset.save_result_item_into_log(log,self.log_save_dir)
                     except:
                         pass
                           
