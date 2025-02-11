@@ -1,27 +1,21 @@
-from typing import List, Optional, Tuple, Type, TypeVar, Union
+from typing import List, Tuple
 
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
 from accelerate import Accelerator
-from accelerate.logging import get_logger as get_accelerator_logger
-from loguru import logger as eval_logger
-from tqdm import tqdm
-from transformers import AutoModel, AutoTokenizer
+from transformers import AutoModelForTokenClassification, AutoTokenizer
 
 from ..utils.log_utils import get_logger
-from ..utils.model_utils import remove_step_prefix
 from ..utils.utils import *
 from .abstract_model import prm
 
-# accelerate_logger = logging.getLogger("debug")
-# accelerate_logger.setLevel(logging.DEBUG)
 logger = get_logger(__name__)
+
+
 class PUREPRM(prm):
     def __init__(
             self,
-            pretrained = "/mnt/petrelfs/chengjie/ceph2/qwen25-math-7b-PRM800k-bs128-lr1e-6-epoch-1-stage2",
-            redundancy_threshold = 0.15,
+            pretrained = "jinachris/Qwen2.5-Math-7B-PRM800K",
+            redundancy_threshold = 0.0,  # not used?
             validity_threshold = 0.0,
         ) -> None:
         super().__init__(
@@ -32,7 +26,7 @@ class PUREPRM(prm):
             pretrained, 
             trust_remote_code=True,
         )
-        self.model = AutoModel.from_pretrained(
+        self.model = AutoModelForTokenClassification.from_pretrained(
             pretrained, 
             torch_dtype=torch.bfloat16,
             trust_remote_code=True,
@@ -41,7 +35,8 @@ class PUREPRM(prm):
         self.accelerator = Accelerator()
 
         self.step_separator = "\n\n"
-        self.step_separator_token_id = self.tokenizer.encode(self.step_separator)[0]
+        self.step_separator_token_id = self.tokenizer(
+            self.step_separator, add_special_tokens=False, return_tensors='pt')['input_ids']
 
     def getitem_function(self,meta_data,index):
         data_idx = meta_data[index]["idx"]
@@ -53,17 +48,15 @@ class PUREPRM(prm):
             question, add_special_tokens=False, return_tensors='pt')['input_ids']
         score_ids = []
         for step in steps:
-            step = remove_step_prefix(step)
             step_ids = self.tokenizer(
                 step, add_special_tokens=False, return_tensors='pt')['input_ids']
             input_ids = torch.cat(
                 [input_ids, step_ids, self.step_separator_token_id], dim=-1)
             score_ids.append(input_ids.size(-1) - 1)
         
-        input_ids = input_ids.squeenze()
+        input_ids = input_ids.squeeze()
         token_mask = torch.zeros_like(input_ids, dtype=torch.bool)
         token_mask[score_ids] = True
-        import ipdb; ipdb.set_trace()
         
         res = dict(
             idx = data_idx,
@@ -76,21 +69,24 @@ class PUREPRM(prm):
         self.model, dataloader = self.accelerator.prepare(self.model, dataloader)
         self.accelerator.wait_for_everyone()
         self.model.eval()
-        gen_kwargs = dataloader.dataset.gen_kwargs
         progress_bar = tqdm_rank0(len(dataloader), desc="Model Responding")
         if len(dataloader) == 0:
             self.accelerator.wait_for_everyone()
             return
         with torch.no_grad():
             for batch_idx, batch in enumerate(dataloader):
-                
                 idx = batch['idx']
                 input_ids = batch['input_ids']
                 attention_mask = batch['attention_mask']
-                token_mask = batch['token_mask']
-                # print(f"data device: {input_ids.device}, current device: {self.accelerator.device}")
-                scores = self.model(input_ids,
-                                    attention_mask,).logits
+                # right pad token mask
+                token_mask_ = batch['token_mask']
+                token_mask = torch.zeros_like(input_ids, dtype=torch.bool)
+                bs = input_ids.size(0)
+                for i in range(bs):
+                    token_mask[i, attention_mask[i].to(bool)] = token_mask_[i][:attention_mask.size(1)]
+                assert torch.all(input_ids[token_mask] == self.step_separator_token_id.item())
+
+                scores = self.model(input_ids, attention_mask).logits
                 step_reward = make_step_rewards(scores, token_mask)
                 
                 for i in range(len(idx)):
@@ -114,14 +110,9 @@ class PUREPRM(prm):
         
         
 def make_step_rewards(logits, token_masks):
-    probabilities = F.softmax(logits, dim=-1)
-    probabilities = probabilities * token_masks.unsqueeze(-1) # bs, seq_len, num_labels
-    
     all_scores_res = []
-    for i in range(probabilities.size(0)):
-        sample = probabilities[i] # seq_len, num_labels
-        usefule_probs = sample[sample != 0].view(-1, 2) # valid_tokens, num_labels
-        step_rewards = usefule_probs[:, 1] - usefule_probs[:, 0]
-        non_zero_elements_list = step_rewards.cpu().tolist()
-        all_scores_res.append(non_zero_elements_list)
+    for sample, token_mask in zip(logits, token_masks):
+        probs = sample[token_mask].softmax(dim=-1)
+        process_reward = probs[:, 1] - probs[:, 0]
+        all_scores_res.append(process_reward.cpu().tolist())
     return all_scores_res

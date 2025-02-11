@@ -19,7 +19,7 @@ AVAILABLE_MODELS = {
     "qwen_qwq": "QwenQwQ",
     "qwen_prm": "QwenPRM",
     "vllm_models": "VllmModels",
-    "pure_prm": "PurePRM",
+    "pure_prm": "PUREPRM",
 }
 
 
