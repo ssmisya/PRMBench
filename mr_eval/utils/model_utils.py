@@ -1,14 +1,8 @@
 import os,sys,torch
 from mr_eval.utils import *
-sys.path.append("/mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/ref/ReasonEval/codes")
-from examples import *
-
 import json, re
-import torch.nn as nn
-from transformers import MistralModel, MistralPreTrainedModel, LlamaModel, LlamaPreTrainedModel, AutoTokenizer
-from transformers.configuration_utils import PretrainedConfig
 from copy import deepcopy
-from tqdm import tqdm
+
 
 
 def answer_sequence_to_str(answer_sequence):
@@ -33,7 +27,7 @@ def answer_sequence_to_reasoneval_list(answer_sequence):
     
 
 def get_best_answer_by_item(item,return_type="shepherd"):
-    steps = prm_item["label"]["steps"]
+    steps = item["label"]["steps"]
     best_answers = []
     for step in steps:
         if step["human_completion"] is not None and step["chosen_completion"] is None:
@@ -57,81 +51,6 @@ def get_latex_str(question,answer):
     return res
 
 
-
-def initialize_reasoneval_model(model_name_or_path="/mnt/petrelfs/songmingyang/songmingyang/model/reasoning/ReasonEval-7B",model_size="7B"):
-    # Loading the model
-    model_file_path = model_name_or_path
-    tokenizer = AutoTokenizer.from_pretrained(model_file_path)
-    if model_size == '7B':
-        model = ReasonEval_7B.from_pretrained(model_file_path)
-    elif model_size == '34B':
-        model = ReasonEval_34B.from_pretrained(model_file_path)
-    else:
-        raise ValueError(f"Invalid model size: {model_size}")
-    if torch.cuda.is_available():
-        model = model.to('cuda')
-    return model,tokenizer
-
-def reasoneval_inference(question,reasoning_steps,model,tokenizer):
-    # Preprocessing input
-    PROMPT_FORMAT = "Question:\n{input}\nAnswer:\nLet's think step by step.\n"
-    step_separator = f"{tokenizer.pad_token}"
-    combined_steps = ""
-    for steps in reasoning_steps:
-        combined_steps += steps + step_separator
-    prompt = PROMPT_FORMAT.format(input=question)
-    tokenized_result = tokenizer(prompt + step_separator + combined_steps)['input_ids']
-
-    ## Separating labels and adjusting token IDs
-    separator_token_id = tokenizer(step_separator)['input_ids'][-1]
-    labeled_token_indices = []
-    adjusted_token_ids = []
-    separator_count = 0
-    for idx, token_id in enumerate(tokenized_result):
-        if token_id == separator_token_id:
-            labeled_token_indices.append(idx - 1 - separator_count)
-            separator_count += 1
-        else:
-            adjusted_token_ids.append(token_id)
-    if isinstance(model,ReasonEval_7B):
-        adjusted_token_ids = [1] + adjusted_token_ids # Adjusting to recover the first token_ids of the sentences
-        adjusted_token_ids=torch.tensor([adjusted_token_ids])
-        labeled_token_indices = labeled_token_indices[2:]  # Adjusting to skip the first two separator (begining and endding of the problems)
-    elif isinstance(model,ReasonEval_34B):
-        adjusted_token_ids=torch.tensor([adjusted_token_ids])
-        labeled_token_indices = labeled_token_indices[1:]  # Adjusting to skip the first separator (endding of the problems)
-    else:
-        raise ValueError(f"Invalid model size!")
-    assert len(labeled_token_indices) == len(reasoning_steps)
-
-    attention_mask = adjusted_token_ids.new_ones(adjusted_token_ids.size(), dtype=torch.bool)
-    # Evaluating reasoning steps using ReasonEval
-    with torch.no_grad():
-        adjusted_token_ids = adjusted_token_ids.to(model.device)
-        attention_mask = attention_mask.to(model.device)
-        reasoning_scores = model(adjusted_token_ids, attention_mask)[0,labeled_token_indices , :]
-        scores = torch.softmax(reasoning_scores, dim=-1).tolist()
-
-    # Calculating the validity and redundancy scores
-    ## score: [p_{negative}, p_{neutral}, p_{positive}]
-
-    ## S_{validity} = p_{neutral} + p_{positive}
-    step_level_validity_scores =  [(score[1] + score[2]) for score in scores]
-    print(f"step_level_validity_scores: {step_level_validity_scores}")
-    # ReasonEval-7B for the example: [0.9492, 0.7863 ,0.2520, 0.7860, 0.9125, 0.5916, 0.4494, 0.8189, 0.8240, 0.2671]
-    # ReaspnEval-34B for the example: [0.9360, 0.6813 ,0.0720, 0.2811, 0.4531, 0.1122, 0.1328, 0.2026, 0.2265 0.1163]
-
-    ## S_{redundancy} = p_{neutral}
-    step_level_redundancy_scores = [score[1] for score in scores]
-    print(f"step_level_redundancy_scores: {step_level_redundancy_scores}")
-    # ReasonEval-7B for the example: [0.4433, 0.1287, 0.0397, 0.0789, 0.0789, 0.0509, 0.0487, 0.0702, 0.0955, 0.0120]
-    # ReasonEval-34B for the example: [0.6060, 0.1682, 0.0258, 0.1044, 0.1604, 0.0404, 0.0447, 0.0507, 0.0492, 0.0236]
-    
-    solution_level_validity_scores = min(step_level_validity_scores)
-    print(f"solution_level_validity_scores: {solution_level_validity_scores}")
-    solution_level_redundancy_scores = max(step_level_redundancy_scores)
-    print(f"solution_level_validity_scores: {solution_level_redundancy_scores}")
-    return step_level_validity_scores,step_level_redundancy_scores,solution_level_validity_scores,solution_level_redundancy_scores
 
 def score_list_to_str(score_list):
     valid2_list = [str(round(i,2)) for i in score_list]

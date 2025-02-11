@@ -21,6 +21,8 @@ from ..utils.model_utils import remove_step_prefix
 logger = get_logger(__name__)
 
 try:
+    # Some skywork specific functions.
+    # please modify your code if you are evaluating skyworkPRM
     sys.path.append('/mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/ref/skywork-o1-prm-inference')
     from model_utils.prm_model import PRM_MODEL
     from model_utils.io_utils import prepare_input, prepare_batch_input_for_model, derive_step_rewards
