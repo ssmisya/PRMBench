@@ -34,7 +34,7 @@ class SkyworkPRM(prm):
             self,
             pretrained = "/mnt/petrelfs/songmingyang/songmingyang/model/reasoning/Skywork-o1-Open-PRM-Qwen-2.5-1.5B",
             step_tag = 'ки',
-            validity_threshold = 0.5,
+            validity_threshold = -0.05,
         ) -> None:
         
         super().__init__(validity_threshold=validity_threshold)
@@ -99,7 +99,8 @@ class SkyworkPRM(prm):
                 
                 for i in range(len(idx)):
                     step_level_validity_scores = step_rewards[i]
-                    step_level_validity_labels = [item > self.validity_threshold for item in step_level_validity_scores]
+                    judge_label_scores = [step_level_validity_scores[0]] + [step_level_validity_scores[i] - step_level_validity_scores[i-1] for i in range(1, len(step_level_validity_scores))]
+                    step_level_validity_labels = [item > self.validity_threshold for item in judge_label_scores]
 
                     idx_item = idx[i]
                     score_dict = dict(

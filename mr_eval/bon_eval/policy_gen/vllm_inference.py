@@ -11,10 +11,22 @@ from transformers import HfArgumentParser
 import re
 
 def extract_answer_from_model_response(model_response):
-    # 使用正则表达式匹配 \boxed{内容}
-    matches = re.findall(r'\\boxed\{(.*?)\}', model_response)
-    if matches:
-        return str(matches[-1])
+    # 使用正则表达式匹配 \boxed{内容}，允许内容中包含大括号
+    stack = []
+    start = None
+    for i, char in enumerate(model_response):
+        if i < 7:
+            continue
+        if model_response[i-7:i] == '\\boxed{':
+            stack.append('{')
+            if start is None:
+                start = i
+        elif char == '{' and stack:
+            stack.append('{')
+        elif char == '}' and stack:
+            stack.pop()
+            if not stack:
+                return model_response[start:i]
     return None
 
 @dataclass
@@ -86,6 +98,8 @@ class VllmInference():
             self.load_data_mmlu(self.input_path)
         elif self.task in ["olympiadbench"]:
             self.load_data_olympiadbench(self.input_path)
+        elif self.task in ["mmluChoice"]:
+            self.load_data_mmluChoice(self.input_path)
         else:
             raise NotImplementedError("Task not implemented")
         
@@ -177,6 +191,29 @@ class VllmInference():
             messages = deepcopy(self.messages)
             messages.append({"role": "user", "content": question})
             self.conversations.append(messages)
+    
+    def load_data_mmluChoice(self, data_path):
+        dataset =  process_jsonl(data_path)
+        self.data = []
+        self.conversations = []
+        for idx,item in enumerate(dataset):
+            # Load meta data
+            question = item["question"]
+            ans_str = item["ans_str"]
+            answer = item["answer"]
+            choices = item["choices"]
+            
+            item_idx = item["id"].split("_")[1].strip()
+            item_idx = f"{self.task}_{item_idx}"
+            
+            res = {"id":item_idx,"question":question,"ans_str":ans_str,"answer":answer,"choices":choices}
+            self.data.append(res)
+            
+            # Load conversation
+            messages = deepcopy(self.messages)
+            messages.append({"role": "user", "content": question})
+            self.conversations.append(messages)
+            
             
             
     def resume_from_checkpoint(self):

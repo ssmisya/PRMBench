@@ -116,10 +116,12 @@ class BaseEvalDataset(Dataset):
                     self.processed_id[ckpt_item["results"]["idx"]] = 1
                     
             self.meta_data = [item for item in self.meta_data if item["idx"] not in self.processed_id]
+            self.full_data_ids = {item["idx"] for item in self.full_data}
+            self.results = [item for item in self.results if item["idx"] in self.full_data_ids]
             logger.info(f"Total items: {len(self.full_data)}, processed items: {len(self.results)}, remaining items: {len(self.meta_data)}")
         else:
             logger.info(f"ckpt path {ckpt_path} not found")
-
+        
     
     def save_item_into_ckpt_file(self,result_item):
         write_item = dict(task_name=self.task_name,model_name=self.model_name,results=result_item)

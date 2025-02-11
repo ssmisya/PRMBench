@@ -1,5 +1,5 @@
 task_name: "prmbench_bon"
-dataset_path: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/bon_eval/scripts/logs/inference_res_subset200
+dataset_path: /mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_eval/bon_eval/scripts/logs/fix_inference_full/eval_res
 dataset_type: "dir_of_jsonl"
 generation_config:
   max_length: 2048

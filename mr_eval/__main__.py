@@ -29,7 +29,8 @@ def main():
             config = [config]
             
         for idx, config_item in enumerate(config):
-            dist_wait_for_everyone()
+            if model_args.model != "vllm_models":
+                dist_wait_for_everyone()
             gc.collect()
             torch.cuda.empty_cache()
             logger.info(f"After Cleaning: Memory Allocated: {torch.cuda.memory_allocated()/(1024 ** 3) :.2f} GB")
