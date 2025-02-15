@@ -1,15 +1,7 @@
 source ~/.bashrc
 source ~/anaconda3/bin/activate smoe
 
-# environment variables
-export OMP_NUM_THREADS=8
-AD_NAME=songmingyang
-AD_PASSWORD=959291Aa
-export http_proxy=http://${AD_NAME}:${AD_PASSWORD}@10.1.8.50:33128/
-export https_proxy=http://${AD_NAME}:${AD_PASSWORD}@10.1.8.50:33128/ 
-export HTTP_PROXY=http://${AD_NAME}:${AD_PASSWORD}@10.1.8.50:33128/ 
-export HTTPS_PROXY=http://${AD_NAME}:${AD_PASSWORD}@10.1.8.50:33128/
-# export HF_ENDPOINT=https://hf-mirror.com
+
 
 code_base=/mnt/petrelfs/songmingyang/code/reasoning/MR_Hallucination/mr_annotate/build_data/model_inference/qwq
 cd $code_base

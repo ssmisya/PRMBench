@@ -24,7 +24,7 @@ def seed_everything(seed=0):
 
 def compute_metrics(dataset_name, scored_results, key_list):
     
-    sample_nums = [1, 2,4,8, 16, 32, 64]
+    sample_nums = [1, 2, 4, 8, 16, 32, 64]
 
     metrics = {"w/o sc":{}, "w/ sc":{}, "sc": {}, "pass@k": {}}
 

@@ -171,6 +171,7 @@ mr_eval/bon_eval/scripts/
 
 mr_annotate/build_data/selection_of_data/
 mr_annotate/build_data/scripts/
+mr_annotate/build_data/model_inference/qwq/scripts
 # data
 mr_annotate/annotation/data/
 
